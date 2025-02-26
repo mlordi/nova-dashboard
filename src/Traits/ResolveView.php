@@ -26,19 +26,20 @@ trait ResolveView
             /**
              * When there is a "resource" param on the URL, we are able to infer the Resource from it
              */
-            !is_null($request->route('resource')) => $request->newResource()->cards(),
+            !is_null($request->route('resource')) => collect($request->newResource()->cards()),
     
             /**
              * If the dashboard is placed on a Nova Resource we need to find which resource was it
              * And retrieve its available cards
              */
-            $controller instanceof CardController && $resolver => $resolver()->cards(),
+            $controller instanceof CardController && $resolver => collect($resolver()->cards()),
     
             /**
-             * When it is a Nova Dashboard, retrieve the available cards
+             * When it is a Nova Dashboard, retrieve the available dashboard cards
              */
             $controller instanceof WidgetController,
-            $controller instanceof DashboardController => collect(Nova::cards()),
+            $controller instanceof DashboardController => collect(Nova::dashboards())
+                ->flatMap(fn ($dashboard) => $dashboard->cards()),
     
             /**
              * ¯\_(ツ)_/¯
