@@ -38,7 +38,8 @@ trait ResolveView
              * When it is nova dashboard, we retrieve the cards from global nova helper function
              */
             $controller instanceof WidgetController,
-            $controller instanceof DashboardController => Nova::allAvailableDashboardCards($request),
+            $controller instanceof DashboardController => collect(Nova::availableCards($request)),
+
 
             /**
              * ¯\_(ツ)_/¯
